@@ -74,6 +74,18 @@ input[type="file"]{display:none}
   .stat .value{font-size:0.9rem}
   .inst-amount{font-size:13px}
 }
+
+.receipt-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.receipt-modal.show{display:flex}
+.receipt-modal-box{background:#1e293b;border-radius:18px;padding:24px;max-width:400px;width:100%;border:1px solid #334155;box-sizing:border-box}
+.receipt-modal-box h3{color:#60a5fa;margin-bottom:10px;font-size:16px}
+.receipt-modal-box p{color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.7}
+.receipt-modal-box textarea{width:100%;min-height:150px;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-family:'Courier New',monospace;font-size:13px;direction:rtl;resize:vertical;outline:none;line-height:1.7;box-sizing:border-box}
+.receipt-modal-box textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2)}
+.receipt-modal-btns{display:flex;gap:8px;margin-top:14px}
+.receipt-modal-btns button{flex:1;padding:12px;border-radius:10px;border:none;font-family:inherit;font-weight:bold;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.receipt-modal-btns button.cancel{background:#334155;color:#94a3b8}
+.receipt-text{background:#0f172a;padding:12px;border-radius:8px;font-size:12px;color:#e2e8f0;line-height:1.8;text-align:right;font-family:'Courier New',monospace;white-space:pre-wrap;word-break:break-word;margin-top:8px}
 </style>
 </head>
 <body>
@@ -323,28 +335,52 @@ function togglePaid(id) {
 
 
 
+
+
+
+
+
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('receipt-modal')) closeReceiptModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeReceiptModal();
+});
+
+
 function editReceipt(id) {
-  const inst = data.installments.find(i => i.id === id);
+  var inst = data.installments.find(function(i) { return i.id === id; });
   if (!inst) return;
-  const current = inst.receipt || '';
-  const modal = document.createElement('div');
-  modal.className = 'receipt-modal';
+  var current = inst.receipt || '';
+  var oldModal = document.querySelector('.receipt-modal');
+  if (oldModal) oldModal.remove();
+  var modal = document.createElement('div');
+  modal.className = 'receipt-modal show';
+  modal.id = 'receiptModal';
   modal.innerHTML = '<div class="receipt-modal-box">' +
     '<h3>📝 متن رسید قسط ' + id + '</h3>' +
     '<p>شماره پیگیری، تاریخ، مبلغ یا هر چیزی که لازمه رو وارد کن:</p>' +
-    '<textarea id="receiptText" placeholder="مثال:\nشماره پیگیری: 123456789\nتاریخ: 1405/08/15\nمبلغ: 200,000,000 ریال">' + current + '</textarea>' +
+    '<textarea id="receiptTextArea" placeholder="شماره پیگیری: 123456789&#10;تاریخ: 1405/08/15&#10;مبلغ: 200,000,000 ریال">' + current + '</textarea>' +
     '<div class="receipt-modal-btns">' +
-    '<button onclick="saveReceipt(' + id + ')">💾 ذخیره</button>' +
-    '<button onclick="closeReceiptModal()" class="cancel">انصراف</button>' +
+    '<button type="button" onclick="saveReceipt(' + id + ')">💾 ذخیره</button>' +
+    '<button type="button" onclick="closeReceiptModal()" class="cancel">انصراف</button>' +
     '</div></div>';
   document.body.appendChild(modal);
-  modal.classList.add('show');
-  setTimeout(function() { document.getElementById('receiptText').focus(); }, 100);
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeReceiptModal();
+  });
+  setTimeout(function() {
+    var ta = document.getElementById('receiptTextArea');
+    if (ta) ta.focus();
+  }, 100);
 }
 
 function saveReceipt(id) {
-  const text = document.getElementById('receiptText').value.trim();
-  const inst = data.installments.find(i => i.id === id);
+  var ta = document.getElementById('receiptTextArea');
+  if (!ta) return;
+  var text = ta.value.trim();
+  var inst = data.installments.find(function(i) { return i.id === id; });
   if (inst) {
     inst.receipt = text;
     save();
@@ -359,12 +395,14 @@ function closeReceiptModal() {
   if (m) m.remove();
 }
 
-document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('receipt-modal')) closeReceiptModal();
-});
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeReceiptModal();
 });
+
+// expose به window
+window.editReceipt = editReceipt;
+window.saveReceipt = saveReceipt;
+window.closeReceiptModal = closeReceiptModal;
 
 function showToast(msg, isError) {
   const t = document.getElementById('toast');
