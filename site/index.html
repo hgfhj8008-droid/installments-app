@@ -31,11 +31,11 @@ body{background:#0f172a;color:#e2e8f0;padding:16px;min-height:100vh}
 .progress-bar{height:12px;background:#0f172a;border-radius:99px;overflow:hidden}
 .progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#22d3ee);border-radius:99px;transition:width 0.6s;width:0%}
 
-.installment{background:#1e293b;border-radius:16px;padding:16px;margin-bottom:12px;border:2px solid #334155;transition:all 0.3s;position:relative;overflow:hidden}
+.installment{background:#1e293b;border-radius:16px;padding:16px;margin-bottom:12px;border:2px solid #334155;transition:all 0.3s;position:relative}
 .installment.paid{border-color:#4ade80;background:linear-gradient(135deg,rgba(74,222,128,0.08),#1e293b)}
 .installment.overdue{border-color:#f87171;background:linear-gradient(135deg,rgba(248,113,113,0.08),#1e293b)}
 .installment.due-soon{border-color:#facc15;background:linear-gradient(135deg,rgba(250,204,21,0.08),#1e293b)}
-.inst-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.inst-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .inst-num{background:#3b82f6;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
 .installment.paid .inst-num{background:#4ade80;color:#0f172a}
 .installment.overdue .inst-num{background:#f87171}
@@ -48,50 +48,29 @@ body{background:#0f172a;color:#e2e8f0;padding:16px;min-height:100vh}
 .inst-status.overdue{background:#f87171;color:#fff}
 .inst-status.due-soon{background:#facc15;color:#0f172a}
 .inst-date{font-size:11px;color:#94a3b8;margin-top:4px}
-.inst-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.btn{flex:1;min-width:100px;padding:11px;border-radius:10px;border:none;font-family:inherit;font-size:12px;font-weight:bold;cursor:pointer;transition:all 0.2s}
+.inst-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.btn{flex:1;min-width:100px;padding:12px;border-radius:10px;border:none;font-family:inherit;font-size:13px;font-weight:bold;cursor:pointer;transition:all 0.2s}
 .btn:active{transform:scale(0.97)}
 .btn-pay{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
-.btn-pay:hover{box-shadow:0 4px 16px rgba(16,185,129,0.4)}
 .btn-unpay{background:#334155;color:#94a3b8}
-.btn-upload{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
-.btn-upload:hover{box-shadow:0 4px 16px rgba(99,102,241,0.4)}
-.btn-view{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
-.inst-receipt{margin-top:12px;padding:10px;background:#0f172a;border-radius:10px;border:1px dashed #334155;text-align:center;font-size:12px;color:#94a3b8}
-.inst-receipt img{max-width:100%;max-height:200px;border-radius:8px;margin-top:8px}
+
+.receipt-box{background:#0f172a;border-radius:12px;padding:12px;border:1px solid #334155}
+.receipt-label{font-size:11px;color:#94a3b8;margin-bottom:8px;font-weight:bold}
+.receipt-textarea{width:100%;min-height:80px;padding:10px 12px;background:#1e293b;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-family:Tahoma,sans-serif;font-size:13px;direction:rtl;resize:vertical;outline:none;line-height:1.7;box-sizing:border-box;transition:all 0.2s}
+.receipt-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2);background:#0f172a}
+.receipt-textarea::placeholder{color:#64748b}
 
 .footer{text-align:center;padding:24px;color:#64748b;font-size:12px;margin-top:20px;border-top:1px solid #334155}
 .footer .name{color:#60a5fa;font-weight:bold}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:14px 26px;border-radius:12px;font-weight:bold;font-size:13px;transition:transform 0.4s;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-.toast.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
-
-input[type="file"]{display:none}
 
 @media (max-width:480px){
   .header h1{font-size:1.15rem}
   .stat .value{font-size:0.9rem}
   .inst-amount{font-size:13px}
 }
-
-.receipt-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:20px}
-.receipt-modal.show{display:flex}
-.receipt-modal-box{background:#1e293b;border-radius:18px;padding:24px;max-width:400px;width:100%;border:1px solid #334155;box-sizing:border-box}
-.receipt-modal-box h3{color:#60a5fa;margin-bottom:10px;font-size:16px}
-.receipt-modal-box p{color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.7}
-.receipt-modal-box textarea{width:100%;min-height:150px;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-family:'Courier New',monospace;font-size:13px;direction:rtl;resize:vertical;outline:none;line-height:1.7;box-sizing:border-box}
-.receipt-modal-box textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2)}
-.receipt-modal-btns{display:flex;gap:8px;margin-top:14px}
-.receipt-modal-btns button{flex:1;padding:12px;border-radius:10px;border:none;font-family:inherit;font-weight:bold;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#10b981,#059669);color:#fff}
-.receipt-modal-btns button.cancel{background:#334155;color:#94a3b8}
-.receipt-text{background:#0f172a;padding:12px;border-radius:8px;font-size:12px;color:#e2e8f0;line-height:1.8;text-align:right;font-family:'Courier New',monospace;white-space:pre-wrap;word-break:break-word;margin-top:8px}
-
-.receipt-box{margin-top:12px;background:#0f172a;border-radius:12px;padding:12px;border:1px solid #334155}
-.receipt-label{font-size:11px;color:#94a3b8;margin-bottom:8px;font-weight:bold}
-.receipt-textarea{width:100%;min-height:80px;padding:10px 12px;background:#1e293b;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-family:Tahoma,sans-serif;font-size:13px;direction:rtl;resize:vertical;outline:none;line-height:1.7;box-sizing:border-box;transition:border 0.2s}
-.receipt-textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2);background:#0f172a}
-.receipt-textarea::placeholder{color:#64748b}
 </style>
 </head>
 <body>
@@ -104,26 +83,11 @@ input[type="file"]{display:none}
 </div>
 
 <div class="stats">
-<div class="stat">
-<div class="label">💰 قیمت کل</div>
-<div class="value">2,500,000,000</div>
-</div>
-<div class="stat">
-<div class="label">✅ پیش‌پرداخت</div>
-<div class="value green">700,000,000</div>
-</div>
-<div class="stat">
-<div class="label">📊 باقی‌مانده</div>
-<div class="value red" id="remaining">1,800,000,000</div>
-</div>
-<div class="stat">
-<div class="label">✔️ پرداخت شده</div>
-<div class="value green"><span id="paid-count">0</span> از ۹</div>
-</div>
-<div class="stat full">
-<div class="label">💵 مجموع پرداخت‌شده از اقساط</div>
-<div class="value green" id="total-paid">0</div>
-</div>
+<div class="stat"><div class="label">💰 قیمت کل</div><div class="value">2,500,000,000</div></div>
+<div class="stat"><div class="label">✅ پیش‌پرداخت</div><div class="value green">700,000,000</div></div>
+<div class="stat"><div class="label">📊 باقی‌مانده</div><div class="value red" id="remaining">1,800,000,000</div></div>
+<div class="stat"><div class="label">✔️ پرداخت شده</div><div class="value green"><span id="paid-count">0</span> از ۹</div></div>
+<div class="stat full"><div class="label">💵 مجموع پرداخت‌شده از اقساط</div><div class="value green" id="total-paid">0</div></div>
 </div>
 
 <div class="progress-wrap">
@@ -144,28 +108,18 @@ input[type="file"]{display:none}
 
 </div>
 
-<div class="toast" id="toast">✅ انجام شد!</div>
-
-
+<div class="toast" id="toast">✅ ذخیره شد</div>
 
 <script>
 const KEY = 'installments_mohammed_irg_v1';
 
-// تاریخ‌های اقساط (شمسی) - ۱۵ هر ماه از آبان ۱۴۰۵
 const jalaliDates = [
-  '1405/08/15',  // قسط 1
-  '1405/09/15',  // قسط 2
-  '1405/10/15',  // قسط 3
-  '1405/11/15',  // قسط 4
-  '1405/12/15',  // قسط 5
-  '1406/01/15',  // قسط 6
-  '1406/02/15',  // قسط 7
-  '1406/03/15',  // قسط 8
-  '1406/04/15'   // قسط 9
+  '1405/08/15','1405/09/15','1405/10/15','1405/11/15','1405/12/15',
+  '1406/01/15','1406/02/15','1406/03/15','1406/04/15'
 ];
 
 let data = JSON.parse(localStorage.getItem(KEY) || 'null');
-if (!data) {
+if (!data || !data.installments || data.installments.length !== 9) {
   data = {
     installments: jalaliDates.map((date, i) => ({
       id: i + 1,
@@ -173,148 +127,97 @@ if (!data) {
       amount: 200000000,
       paid: false,
       paidDate: null,
-      receipt: null
+      receipt: ''
     }))
   };
   localStorage.setItem(KEY, JSON.stringify(data));
 }
 
-
-
-// تبدیل تاریخ شمسی به میلادی برای محاسبه
 function jalaliToGregorian(jy, jm, jd) {
   let gy = (jy <= 979) ? 621 : 1600;
   jy -= (jy <= 979) ? 0 : 979;
   let days = (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
   gy += 400 * Math.floor(days / 146097);
   days %= 146097;
-  if (days > 36524) {
-    gy += 100 * Math.floor(--days / 36524);
-    days %= 36524;
-    if (days >= 365) days++;
-  }
+  if (days > 36524) { gy += 100 * Math.floor(--days / 36524); days %= 36524; if (days >= 365) days++; }
   gy += 4 * Math.floor(days / 1461);
   days %= 1461;
-  if (days > 365) {
-    gy += Math.floor((days - 1) / 365);
-    days = (days - 1) % 365;
-  }
+  if (days > 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
   let gd = days + 1;
-  const sal_a = [0, 31, ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const sa = [0,31,((gy%4===0&&gy%100!==0)||(gy%400===0))?29:28,31,30,31,30,31,31,30,31,30,31];
   let gm;
-  for (gm = 0; gm < 13 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+  for (gm = 0; gm < 13 && gd > sa[gm]; gm++) gd -= sa[gm];
   return { gy, gm, gd };
 }
 
-function getTodayJalali() {
-  const now = new Date();
-  const gy = now.getFullYear(), gm = now.getMonth() + 1, gd = now.getDate();
-  const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
-  let jy = (gy <= 1600) ? 0 : 979;
-  let gy2 = gy - ((gy <= 1600) ? 621 : 1600);
-  const gy3 = (gm > 2) ? (gy2 + 1) : gy2;
-  let days = (365 * gy2) + Math.floor((gy3 + 3) / 4) - Math.floor((gy3 + 99) / 100) + Math.floor((gy3 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
-  jy += 33 * Math.floor(days / 12053);
-  days %= 12053;
-  jy += 4 * Math.floor(days / 1461);
-  days %= 1461;
-  if (days > 365) {
-    jy += Math.floor((days - 1) / 365);
-    days = (days - 1) % 365;
-  }
-  const jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
-  const jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
-  return { jy, jm, jd };
-}
-
 function daysUntil(jalaliStr) {
-  const parts = jalaliStr.split('/');
-  const g = jalaliToGregorian(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+  const p = jalaliStr.split('/');
+  const g = jalaliToGregorian(parseInt(p[0]), parseInt(p[1]), parseInt(p[2]));
   const target = new Date(g.gy, g.gm - 1, g.gd);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  target.setHours(0, 0, 0, 0);
+  today.setHours(0,0,0,0);
+  target.setHours(0,0,0,0);
   return Math.floor((target - today) / 86400000);
 }
 
-function formatNum(n) {
-  return Number(n).toLocaleString('en-US');
-}
-
-function save() {
-  localStorage.setItem(KEY, JSON.stringify(data));
-}
+function formatNum(n) { return Number(n).toLocaleString('en-US'); }
+function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
 
 function render() {
   const list = document.getElementById('list');
   list.innerHTML = '';
-  
-  let paidCount = 0;
-  let totalPaid = 0;
-  
-  data.installments.forEach((inst, index) => {
+  let paidCount = 0, totalPaid = 0;
+
+  data.installments.forEach(inst => {
     const days = daysUntil(inst.date);
-    let cls = '';
-    let statusText = 'در انتظار';
-    let statusCls = '';
-    
+    let cls = '', statusText = 'در انتظار', statusCls = '';
+
     if (inst.paid) {
-      cls = 'paid';
-      statusText = '✅ پرداخت شده';
-      statusCls = 'paid';
-      paidCount++;
-      totalPaid += inst.amount;
+      cls = 'paid'; statusText = '✅ پرداخت شده'; statusCls = 'paid';
+      paidCount++; totalPaid += inst.amount;
     } else if (days < 0) {
-      cls = 'overdue';
-      statusText = '⚠️ عقب‌افتاده';
-      statusCls = 'overdue';
+      cls = 'overdue'; statusText = '⚠️ عقب‌افتاده'; statusCls = 'overdue';
     } else if (days <= 7) {
-      cls = 'due-soon';
-      statusText = '⏰ نزدیک سررسید';
-      statusCls = 'due-soon';
+      cls = 'due-soon'; statusText = '⏰ نزدیک سررسید'; statusCls = 'due-soon';
     }
-    
-    const div = document.createElement('div');
-    div.className = 'installment ' + cls;
-    
-    
-    
+
     let daysText = '';
     if (!inst.paid) {
       if (days < 0) daysText = ' (' + Math.abs(days) + ' روز گذشته)';
       else if (days === 0) daysText = ' (امروز!)';
       else daysText = ' (' + days + ' روز مانده)';
     }
-    
-    div.innerHTML = `
-      <div class="inst-header">
-        <div class="inst-num">${inst.id}</div>
-        <div class="inst-info">
-          <div class="inst-title">قسط ${inst.id}</div>
-          <div class="inst-amount">${formatNum(inst.amount)} ریال</div>
-          <div class="inst-date">📅 سررسید: ${inst.date}${daysText}</div>
-        </div>
-        <div class="inst-status ${statusCls}">${statusText}</div>
-      </div>
-      <div class="inst-actions">
-        ${inst.paid
+
+    const div = document.createElement('div');
+    div.className = 'installment ' + cls;
+    div.innerHTML =
+      '<div class="inst-header">' +
+        '<div class="inst-num">' + inst.id + '</div>' +
+        '<div class="inst-info">' +
+          '<div class="inst-title">قسط ' + inst.id + '</div>' +
+          '<div class="inst-amount">' + formatNum(inst.amount) + ' ریال</div>' +
+          '<div class="inst-date">📅 سررسید: ' + inst.date + daysText + '</div>' +
+        '</div>' +
+        '<div class="inst-status ' + statusCls + '">' + statusText + '</div>' +
+      '</div>' +
+      '<div class="inst-actions">' +
+        (inst.paid
           ? '<button class="btn btn-unpay" onclick="togglePaid(' + inst.id + ')">↩️ لغو پرداخت</button>'
           : '<button class="btn btn-pay" onclick="togglePaid(' + inst.id + ')">✅ ثبت پرداخت</button>'
-        }
-        
-        ${inst.receipt ? '<button class="btn btn-view" onclick="viewReceipt(' + inst.id + ')">👁️ مشاهده</button>' : ''}
-      </div>
-      ${receiptHtml}
-    `;
+        ) +
+      '</div>' +
+      '<div class="receipt-box">' +
+        '<div class="receipt-label">📝 متن رسید / توضیحات این قسط:</div>' +
+        '<textarea class="receipt-textarea" placeholder="شماره پیگیری، تاریخ، نام بانک یا هر توضیحی..." oninput="saveReceiptText(' + inst.id + ', this.value)">' + (inst.receipt || '') + '</textarea>' +
+      '</div>';
+
     list.appendChild(div);
   });
-  
-  // آمار
+
   document.getElementById('paid-count').textContent = paidCount;
   document.getElementById('total-paid').textContent = formatNum(totalPaid);
   document.getElementById('remaining').textContent = formatNum(1800000000 - totalPaid);
-  
-  // پیشرفت
+
   const pct = Math.round((paidCount / 9) * 100);
   document.getElementById('progress-pct').textContent = pct + '%';
   document.getElementById('progress-bar').style.width = pct + '%';
@@ -323,71 +226,34 @@ function render() {
 function togglePaid(id) {
   const inst = data.installments.find(i => i.id === id);
   if (!inst) return;
-  
   inst.paid = !inst.paid;
   inst.paidDate = inst.paid ? new Date().toISOString() : null;
   save();
   render();
-  showToast(inst.paid ? '✅ پرداخت ثبت شد' : '↩️ پرداخت لغو شد', !inst.paid);
+  showToast(inst.paid ? '✅ پرداخت ثبت شد' : '↩️ پرداخت لغو شد');
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('receipt-modal')) closeReceiptModal();
-});
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeReceiptModal();
-});
-
-
-
-
-
-
-
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeReceiptModal();
-});
-
-// expose به window
-window.editReceipt = editReceipt;
-window.saveReceipt = saveReceipt;
-window.closeReceiptModal = closeReceiptModal;
-
-
 function saveReceiptText(id, text) {
-  var inst = data.installments.find(function(i) { return i.id === id; });
+  const inst = data.installments.find(i => i.id === id);
   if (inst) {
     inst.receipt = text;
     localStorage.setItem(KEY, JSON.stringify(data));
     clearTimeout(window['_t_' + id]);
     window['_t_' + id] = setTimeout(function() {
       showToast('✅ ذخیره شد');
-    }, 800);
+    }, 700);
   }
 }
-window.saveReceiptText = saveReceiptText;
 
-function showToast(msg, isError) {
+function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'toast' + (isError ? ' error' : '');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
+
+window.togglePaid = togglePaid;
+window.saveReceiptText = saveReceiptText;
 
 render();
 </script>
