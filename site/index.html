@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e3a8a">
+<title>مدیریت اقساط کولر iRG - محمد</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Tahoma,'Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0f172a;color:#e2e8f0;padding:16px;min-height:100vh}
+.container{max-width:800px;margin:0 auto}
+
+.header{background:linear-gradient(135deg,#1e3a8a,#3b82f6);border-radius:20px;padding:24px;margin-bottom:16px;text-align:center;box-shadow:0 8px 32px rgba(30,58,138,0.4)}
+.header h1{font-size:1.4rem;color:#fff;margin-bottom:6px;font-weight:900}
+.header p{font-size:13px;color:rgba(255,255,255,0.85)}
+.header .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:4px 14px;border-radius:20px;font-size:11px;margin-top:8px;color:#fff;font-weight:bold}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:#1e293b;border-radius:14px;padding:14px;border:1px solid #334155;text-align:center}
+.stat .label{font-size:11px;color:#94a3b8;margin-bottom:6px}
+.stat .value{font-size:1rem;font-weight:900;color:#60a5fa;direction:ltr;font-family:monospace}
+.stat .value.green{color:#4ade80}
+.stat .value.red{color:#f87171}
+.stat.full{grid-column:1/-1}
+.stat.full .value{font-size:1.3rem}
+
+.progress-wrap{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:16px;border:1px solid #334155}
+.progress-header{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
+.progress-header .p-label{color:#94a3b8}
+.progress-header .p-value{color:#60a5fa;font-weight:bold}
+.progress-bar{height:12px;background:#0f172a;border-radius:99px;overflow:hidden}
+.progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#22d3ee);border-radius:99px;transition:width 0.6s;width:0%}
+
+.installment{background:#1e293b;border-radius:16px;padding:16px;margin-bottom:12px;border:2px solid #334155;transition:all 0.3s;position:relative;overflow:hidden}
+.installment.paid{border-color:#4ade80;background:linear-gradient(135deg,rgba(74,222,128,0.08),#1e293b)}
+.installment.overdue{border-color:#f87171;background:linear-gradient(135deg,rgba(248,113,113,0.08),#1e293b)}
+.installment.due-soon{border-color:#facc15;background:linear-gradient(135deg,rgba(250,204,21,0.08),#1e293b)}
+.inst-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.inst-num{background:#3b82f6;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
+.installment.paid .inst-num{background:#4ade80;color:#0f172a}
+.installment.overdue .inst-num{background:#f87171}
+.installment.due-soon .inst-num{background:#facc15;color:#0f172a}
+.inst-info{flex:1;min-width:120px}
+.inst-title{font-size:13px;font-weight:bold;color:#e2e8f0}
+.inst-amount{font-size:15px;font-weight:900;color:#60a5fa;margin-top:4px;direction:ltr;font-family:monospace}
+.inst-status{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:bold;background:#334155;color:#94a3b8}
+.inst-status.paid{background:#4ade80;color:#0f172a}
+.inst-status.overdue{background:#f87171;color:#fff}
+.inst-status.due-soon{background:#facc15;color:#0f172a}
+.inst-date{font-size:11px;color:#94a3b8;margin-top:4px}
+.inst-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{flex:1;min-width:100px;padding:11px;border-radius:10px;border:none;font-family:inherit;font-size:12px;font-weight:bold;cursor:pointer;transition:all 0.2s}
+.btn:active{transform:scale(0.97)}
+.btn-pay{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.btn-pay:hover{box-shadow:0 4px 16px rgba(16,185,129,0.4)}
+.btn-unpay{background:#334155;color:#94a3b8}
+.btn-upload{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
+.btn-upload:hover{box-shadow:0 4px 16px rgba(99,102,241,0.4)}
+.btn-view{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.inst-receipt{margin-top:12px;padding:10px;background:#0f172a;border-radius:10px;border:1px dashed #334155;text-align:center;font-size:12px;color:#94a3b8}
+.inst-receipt img{max-width:100%;max-height:200px;border-radius:8px;margin-top:8px}
+
+.footer{text-align:center;padding:24px;color:#64748b;font-size:12px;margin-top:20px;border-top:1px solid #334155}
+.footer .name{color:#60a5fa;font-weight:bold}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:14px 26px;border-radius:12px;font-weight:bold;font-size:13px;transition:transform 0.4s;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
+
+input[type="file"]{display:none}
+
+@media (max-width:480px){
+  .header h1{font-size:1.15rem}
+  .stat .value{font-size:0.9rem}
+  .inst-amount{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<h1>🏢 مدیریت اقساط کولر iRG</h1>
+<p>سیستم مدیریت اقساط</p>
+<div class="badge">👤 مدیریت: محمد</div>
+</div>
+
+<div class="stats">
+<div class="stat">
+<div class="label">💰 قیمت کل</div>
+<div class="value">2,500,000,000</div>
+</div>
+<div class="stat">
+<div class="label">✅ پیش‌پرداخت</div>
+<div class="value green">700,000,000</div>
+</div>
+<div class="stat">
+<div class="label">📊 باقی‌مانده</div>
+<div class="value red" id="remaining">1,800,000,000</div>
+</div>
+<div class="stat">
+<div class="label">✔️ پرداخت شده</div>
+<div class="value green"><span id="paid-count">0</span> از ۹</div>
+</div>
+<div class="stat full">
+<div class="label">💵 مجموع پرداخت‌شده از اقساط</div>
+<div class="value green" id="total-paid">0</div>
+</div>
+</div>
+
+<div class="progress-wrap">
+<div class="progress-header">
+<span class="p-label">📈 پیشرفت پرداخت اقساط</span>
+<span class="p-value" id="progress-pct">0%</span>
+</div>
+<div class="progress-bar"><i id="progress-bar"></i></div>
+</div>
+
+<div id="list"></div>
+
+<div class="footer">
+ساخته شده توسط <span class="name">محمد</span>
+<br>
+کولر iRG - ۹ قسط
+</div>
+
+</div>
+
+<div class="toast" id="toast">✅ انجام شد!</div>
+
+<input type="file" id="receiptInput" accept="image/*" onchange="handleReceipt(event)">
+
+<script>
+const KEY = 'installments_mohammed_irg_v1';
+
+// تاریخ‌های اقساط (شمسی) - ۱۵ هر ماه از آبان ۱۴۰۵
+const jalaliDates = [
+  '1405/08/15',  // قسط 1
+  '1405/09/15',  // قسط 2
+  '1405/10/15',  // قسط 3
+  '1405/11/15',  // قسط 4
+  '1405/12/15',  // قسط 5
+  '1406/01/15',  // قسط 6
+  '1406/02/15',  // قسط 7
+  '1406/03/15',  // قسط 8
+  '1406/04/15'   // قسط 9
+];
+
+let data = JSON.parse(localStorage.getItem(KEY) || 'null');
+if (!data) {
+  data = {
+    installments: jalaliDates.map((date, i) => ({
+      id: i + 1,
+      date: date,
+      amount: 200000000,
+      paid: false,
+      paidDate: null,
+      receipt: null
+    }))
+  };
+  localStorage.setItem(KEY, JSON.stringify(data));
+}
+
+let currentUploadId = null;
+
+// تبدیل تاریخ شمسی به میلادی برای محاسبه
+function jalaliToGregorian(jy, jm, jd) {
+  let gy = (jy <= 979) ? 621 : 1600;
+  jy -= (jy <= 979) ? 0 : 979;
+  let days = (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
+  gy += 400 * Math.floor(days / 146097);
+  days %= 146097;
+  if (days > 36524) {
+    gy += 100 * Math.floor(--days / 36524);
+    days %= 36524;
+    if (days >= 365) days++;
+  }
+  gy += 4 * Math.floor(days / 1461);
+  days %= 1461;
+  if (days > 365) {
+    gy += Math.floor((days - 1) / 365);
+    days = (days - 1) % 365;
+  }
+  let gd = days + 1;
+  const sal_a = [0, 31, ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  let gm;
+  for (gm = 0; gm < 13 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+  return { gy, gm, gd };
+}
+
+function getTodayJalali() {
+  const now = new Date();
+  const gy = now.getFullYear(), gm = now.getMonth() + 1, gd = now.getDate();
+  const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+  let jy = (gy <= 1600) ? 0 : 979;
+  let gy2 = gy - ((gy <= 1600) ? 621 : 1600);
+  const gy3 = (gm > 2) ? (gy2 + 1) : gy2;
+  let days = (365 * gy2) + Math.floor((gy3 + 3) / 4) - Math.floor((gy3 + 99) / 100) + Math.floor((gy3 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+  jy += 33 * Math.floor(days / 12053);
+  days %= 12053;
+  jy += 4 * Math.floor(days / 1461);
+  days %= 1461;
+  if (days > 365) {
+    jy += Math.floor((days - 1) / 365);
+    days = (days - 1) % 365;
+  }
+  const jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+  const jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+  return { jy, jm, jd };
+}
+
+function daysUntil(jalaliStr) {
+  const parts = jalaliStr.split('/');
+  const g = jalaliToGregorian(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+  const target = new Date(g.gy, g.gm - 1, g.gd);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  target.setHours(0, 0, 0, 0);
+  return Math.floor((target - today) / 86400000);
+}
+
+function formatNum(n) {
+  return Number(n).toLocaleString('en-US');
+}
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(data));
+}
+
+function render() {
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  
+  let paidCount = 0;
+  let totalPaid = 0;
+  
+  data.installments.forEach((inst, index) => {
+    const days = daysUntil(inst.date);
+    let cls = '';
+    let statusText = 'در انتظار';
+    let statusCls = '';
+    
+    if (inst.paid) {
+      cls = 'paid';
+      statusText = '✅ پرداخت شده';
+      statusCls = 'paid';
+      paidCount++;
+      totalPaid += inst.amount;
+    } else if (days < 0) {
+      cls = 'overdue';
+      statusText = '⚠️ عقب‌افتاده';
+      statusCls = 'overdue';
+    } else if (days <= 7) {
+      cls = 'due-soon';
+      statusText = '⏰ نزدیک سررسید';
+      statusCls = 'due-soon';
+    }
+    
+    const div = document.createElement('div');
+    div.className = 'installment ' + cls;
+    
+    let receiptHtml = '';
+    if (inst.receipt) {
+      receiptHtml = '<div class="inst-receipt">📎 رسید پرداخت<br><img src="' + inst.receipt + '" alt="رسید"></div>';
+    }
+    
+    let daysText = '';
+    if (!inst.paid) {
+      if (days < 0) daysText = ' (' + Math.abs(days) + ' روز گذشته)';
+      else if (days === 0) daysText = ' (امروز!)';
+      else daysText = ' (' + days + ' روز مانده)';
+    }
+    
+    div.innerHTML = `
+      <div class="inst-header">
+        <div class="inst-num">${inst.id}</div>
+        <div class="inst-info">
+          <div class="inst-title">قسط ${inst.id}</div>
+          <div class="inst-amount">${formatNum(inst.amount)} ریال</div>
+          <div class="inst-date">📅 سررسید: ${inst.date}${daysText}</div>
+        </div>
+        <div class="inst-status ${statusCls}">${statusText}</div>
+      </div>
+      <div class="inst-actions">
+        ${inst.paid
+          ? '<button class="btn btn-unpay" onclick="togglePaid(' + inst.id + ')">↩️ لغو پرداخت</button>'
+          : '<button class="btn btn-pay" onclick="togglePaid(' + inst.id + ')">✅ ثبت پرداخت</button>'
+        }
+        <button class="btn btn-upload" onclick="uploadReceipt(' + inst.id + ')">📎 ${inst.receipt ? 'تغییر' : 'آپلود'} رسید</button>
+        ${inst.receipt ? '<button class="btn btn-view" onclick="viewReceipt(' + inst.id + ')">👁️ مشاهده</button>' : ''}
+      </div>
+      ${receiptHtml}
+    `;
+    list.appendChild(div);
+  });
+  
+  // آمار
+  document.getElementById('paid-count').textContent = paidCount;
+  document.getElementById('total-paid').textContent = formatNum(totalPaid);
+  document.getElementById('remaining').textContent = formatNum(1800000000 - totalPaid);
+  
+  // پیشرفت
+  const pct = Math.round((paidCount / 9) * 100);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function togglePaid(id) {
+  const inst = data.installments.find(i => i.id === id);
+  if (!inst) return;
+  
+  inst.paid = !inst.paid;
+  inst.paidDate = inst.paid ? new Date().toISOString() : null;
+  save();
+  render();
+  showToast(inst.paid ? '✅ پرداخت ثبت شد' : '↩️ پرداخت لغو شد', !inst.paid);
+}
+
+function uploadReceipt(id) {
+  currentUploadId = id;
+  document.getElementById('receiptInput').click();
+}
+
+function handleReceipt(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('❌ حجم عکس باید کمتر از ۵ مگابایت باشه', true);
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const inst = data.installments.find(i => i.id === currentUploadId);
+    if (inst) {
+      inst.receipt = e.target.result;
+      save();
+      render();
+      showToast('✅ رسید ذخیره شد');
+    }
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function viewReceipt(id) {
+  const inst = data.installments.find(i => i.id === id);
+  if (!inst || !inst.receipt) return;
+  const w = window.open();
+  w.document.write('<html><head><title>رسید قسط ' + id + '</title><style>body{margin:0;background:#0f172a;display:flex;align-items:center;justify-content:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="' + inst.receipt + '"></body></html>');
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+render();
+</script>
+</body>
+</html>
