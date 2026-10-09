@@ -128,7 +128,7 @@ input[type="file"]{display:none}
 
 <div class="toast" id="toast">✅ انجام شد!</div>
 
-<input type="file" id="receiptInput" accept="image/*" onchange="handleReceipt(event)">
+
 
 <script>
 const KEY = 'installments_mohammed_irg_v1';
@@ -161,7 +161,7 @@ if (!data) {
   localStorage.setItem(KEY, JSON.stringify(data));
 }
 
-let currentUploadId = null;
+
 
 // تبدیل تاریخ شمسی به میلادی برای محاسبه
 function jalaliToGregorian(jy, jm, jd) {
@@ -261,7 +261,7 @@ function render() {
     
     let receiptHtml = '';
     if (inst.receipt) {
-      receiptHtml = '<div class="inst-receipt">📎 رسید پرداخت<br><img src="' + inst.receipt + '" alt="رسید"></div>';
+      receiptHtml = '<div class="inst-receipt">📝 متن رسید:<div class="receipt-text">' + inst.receipt.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div></div>';
     }
     
     let daysText = '';
@@ -286,7 +286,7 @@ function render() {
           ? '<button class="btn btn-unpay" onclick="togglePaid(' + inst.id + ')">↩️ لغو پرداخت</button>'
           : '<button class="btn btn-pay" onclick="togglePaid(' + inst.id + ')">✅ ثبت پرداخت</button>'
         }
-        <button class="btn btn-upload" onclick="uploadReceipt(' + inst.id + ')">📎 ${inst.receipt ? 'تغییر' : 'آپلود'} رسید</button>
+        <button class="btn btn-upload" onclick="editReceipt(' + inst.id + ')">📝 ${inst.receipt ? 'ویرایش رسید' : 'ثبت رسید'}</button>
         ${inst.receipt ? '<button class="btn btn-view" onclick="viewReceipt(' + inst.id + ')">👁️ مشاهده</button>' : ''}
       </div>
       ${receiptHtml}
@@ -316,40 +316,55 @@ function togglePaid(id) {
   showToast(inst.paid ? '✅ پرداخت ثبت شد' : '↩️ پرداخت لغو شد', !inst.paid);
 }
 
-function uploadReceipt(id) {
-  currentUploadId = id;
-  document.getElementById('receiptInput').click();
-}
 
-function handleReceipt(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  if (file.size > 5 * 1024 * 1024) {
-    showToast('❌ حجم عکس باید کمتر از ۵ مگابایت باشه', true);
-    return;
-  }
-  
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const inst = data.installments.find(i => i.id === currentUploadId);
-    if (inst) {
-      inst.receipt = e.target.result;
-      save();
-      render();
-      showToast('✅ رسید ذخیره شد');
-    }
-  };
-  reader.readAsDataURL(file);
-  event.target.value = '';
-}
 
-function viewReceipt(id) {
+
+
+
+
+
+function editReceipt(id) {
   const inst = data.installments.find(i => i.id === id);
-  if (!inst || !inst.receipt) return;
-  const w = window.open();
-  w.document.write('<html><head><title>رسید قسط ' + id + '</title><style>body{margin:0;background:#0f172a;display:flex;align-items:center;justify-content:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="' + inst.receipt + '"></body></html>');
+  if (!inst) return;
+  const current = inst.receipt || '';
+  const modal = document.createElement('div');
+  modal.className = 'receipt-modal';
+  modal.innerHTML = '<div class="receipt-modal-box">' +
+    '<h3>📝 متن رسید قسط ' + id + '</h3>' +
+    '<p>شماره پیگیری، تاریخ، مبلغ یا هر چیزی که لازمه رو وارد کن:</p>' +
+    '<textarea id="receiptText" placeholder="مثال:\nشماره پیگیری: 123456789\nتاریخ: 1405/08/15\nمبلغ: 200,000,000 ریال">' + current + '</textarea>' +
+    '<div class="receipt-modal-btns">' +
+    '<button onclick="saveReceipt(' + id + ')">💾 ذخیره</button>' +
+    '<button onclick="closeReceiptModal()" class="cancel">انصراف</button>' +
+    '</div></div>';
+  document.body.appendChild(modal);
+  modal.classList.add('show');
+  setTimeout(function() { document.getElementById('receiptText').focus(); }, 100);
 }
+
+function saveReceipt(id) {
+  const text = document.getElementById('receiptText').value.trim();
+  const inst = data.installments.find(i => i.id === id);
+  if (inst) {
+    inst.receipt = text;
+    save();
+    render();
+    showToast('✅ رسید ذخیره شد');
+  }
+  closeReceiptModal();
+}
+
+function closeReceiptModal() {
+  var m = document.querySelector('.receipt-modal');
+  if (m) m.remove();
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('receipt-modal')) closeReceiptModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeReceiptModal();
+});
 
 function showToast(msg, isError) {
   const t = document.getElementById('toast');
