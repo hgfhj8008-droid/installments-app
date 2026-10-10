@@ -111,7 +111,7 @@ body{background:#0f172a;color:#e2e8f0;padding:16px;min-height:100vh}
 <div class="toast" id="toast">✅ ذخیره شد</div>
 
 <script>
-const KEY = 'installments_mohammed_irg_v1';
+const KEY = 'installments_mohammed_irg_v2';
 
 const jalaliDates = [
   '1405/08/15','1405/09/15','1405/10/15','1405/11/15','1405/12/15',
@@ -124,7 +124,7 @@ if (!data || !data.installments || data.installments.length !== 9) {
     installments: jalaliDates.map((date, i) => ({
       id: i + 1,
       date: date,
-      amount: 200000000,
+      amount: (i === 0) ? 300000000 : (i === 8) ? 100000000 : 200000000,
       paid: false,
       paidDate: null,
       receipt: ''
